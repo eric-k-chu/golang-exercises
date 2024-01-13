@@ -1,0 +1,7 @@
+go 1.21.6
+
+use (
+	./go-module/greetings
+	./go-module/hello
+	./hello-world
+)
