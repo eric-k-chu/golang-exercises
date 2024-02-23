@@ -11,6 +11,10 @@ type Todo struct {
 	Title string `json:"title"`
 }
 
+type PartialTodo struct {
+	Title string `json:"title"`
+}
+
 var todos = []Todo{
 	{ID: "1", Title: "bla"},
 	{ID: "2", Title: "xdd"},
@@ -23,6 +27,7 @@ func main() {
 	router.GET("/todos/:id", getTodoById)
 	router.POST("/todos", postTodo)
 	router.DELETE("/todos/:id", deleteTodo)
+	router.PATCH("/todos/:id", patchTodo)
 
 	router.Run("localhost:8080")
 }
@@ -57,18 +62,32 @@ func getTodoById(context *gin.Context) {
 func deleteTodo(context *gin.Context) {
 	id := context.Param("id")
 
-	index := -1
 	for i, todo := range todos {
 		if todo.ID == id {
-			index = i
-			break
+			todos = append(todos[:i], todos[i+1:]...)
+			context.Status(http.StatusNoContent)
+			return
+		}
+	}
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+}
+
+func patchTodo(context *gin.Context) {
+	id := context.Param("id")
+
+	var newTodo PartialTodo
+
+	if err := context.BindJSON(&newTodo); err != nil {
+		return
+	}
+
+	for i, todo := range todos {
+		if todo.ID == id {
+			todos[i].Title = newTodo.Title
+			context.IndentedJSON(http.StatusOK, todos[i])
+			return
 		}
 	}
 
-	if index != -1 {
-		// [0, index), (index, index+1]
-		todos = append(todos[:index], todos[index+1:]...)
-	} else {
-		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
-	}
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 }
