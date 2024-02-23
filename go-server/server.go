@@ -22,6 +22,7 @@ func main() {
 	router.GET("/todos", getTodos)
 	router.GET("/todos/:id", getTodoById)
 	router.POST("/todos", postTodo)
+	router.DELETE("/todos/:id", deleteTodo)
 
 	router.Run("localhost:8080")
 }
@@ -51,4 +52,23 @@ func getTodoById(context *gin.Context) {
 		}
 	}
 	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+}
+
+func deleteTodo(context *gin.Context) {
+	id := context.Param("id")
+
+	index := -1
+	for i, todo := range todos {
+		if todo.ID == id {
+			index = i
+			break
+		}
+	}
+
+	if index != -1 {
+		// [0, index), (index, index+1]
+		todos = append(todos[:index], todos[index+1:]...)
+	} else {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+	}
 }
