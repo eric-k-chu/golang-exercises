@@ -60,6 +60,7 @@ export function Entries() {
                 </svg>
               </Link>
             </div>
+            <p>{n.notes}</p>
           </div>
         </div>
       ))}

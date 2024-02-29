@@ -1,17 +1,30 @@
 import { FormEvent } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEntryForm } from "../hooks/useEntryForm";
 import { Container } from "./Container";
+import { updateEntry } from "../lib/api";
 
 export function EditForm() {
   const { id: entryId } = useParams();
-  const { id, title, photoUrl, notes, isLoading, error } =
-    useEntryForm(entryId);
+  const navigate = useNavigate();
+  const { title, photoUrl, notes, isLoading, error } = useEntryForm(entryId);
 
   async function editEntry(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(id.get);
-    alert("wip");
+    try {
+      await updateEntry(entryId, {
+        title: title.get,
+        photoUrl: photoUrl.get,
+        notes: notes.get,
+      });
+      navigate("/");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "An unknown error has occured.",
+      );
+    }
   }
 
   if (isLoading) {

@@ -22,3 +22,17 @@ export async function postNewEntry(entry: Partial<Entry>): Promise<void> {
   });
   if (!res.ok) throw new Error("Unable to create a new entry");
 }
+
+export async function updateEntry(
+  id: string | undefined,
+  entry: Partial<Entry>,
+): Promise<void> {
+  const res = await fetch(`http://localhost:8080/entries/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(entry),
+  });
+  if (!res.ok) throw new Error("Unable to create a new entry");
+}

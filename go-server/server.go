@@ -13,6 +13,12 @@ type Entry struct {
 	Notes    string `json:"notes"`
 }
 
+type PartialEntry struct {
+	Title    string `json:"title"`
+	PhotoUrl string `json:"photoUrl"`
+	Notes    string `json:"notes"`
+}
+
 var entries = []Entry{
 	{ID: "1", Title: "Pikachu", PhotoUrl: "https://archives.bulbagarden.net/media/upload/thumb/4/4a/0025Pikachu.png/1200px-0025Pikachu.png", Notes: "eletric"},
 	{ID: "2", Title: "Ceruledge", PhotoUrl: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/937.png", Notes: "fire and ghost"},
@@ -25,7 +31,7 @@ func main() {
 	router.GET("/entries/:id", getEntryById)
 	router.POST("/entries", postEntry)
 	router.DELETE("/entries/:id", deleteEntry)
-	// router.PATCH("/entries/:id", patchTodo)
+	router.POST("/entries/:id", updateEntry)
 
 	router.Run(":8080")
 }
@@ -70,24 +76,30 @@ func deleteEntry(context *gin.Context) {
 	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "entry not found"})
 }
 
-/*
-func patchTodo(context *gin.Context) {
+func updateEntry(context *gin.Context) {
 	id := context.Param("id")
 
-	var newTodo PartialTodo
+	var e PartialEntry
 
-	if err := context.BindJSON(&newTodo); err != nil {
+	if err := context.BindJSON(&e); err != nil {
 		return
 	}
 
-	for i, todo := range todos {
-		if todo.ID == id {
-			todos[i].Title = newTodo.Title
-			context.IndentedJSON(http.StatusOK, todos[i])
+	editedEntry := Entry{
+		ID:       id,
+		Title:    e.Title,
+		PhotoUrl: e.PhotoUrl,
+		Notes:    e.Notes,
+	}
+
+	for i, entry := range entries {
+		if entry.ID == id {
+			entries[i] = editedEntry
+			context.IndentedJSON(http.StatusOK, entries[i])
 			return
 		}
 	}
 
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "entry not found"})
+
 }
-*/
