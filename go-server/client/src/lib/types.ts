@@ -1,4 +1,4 @@
-export interface Entries {
+export interface Entry {
   id: string;
   title: string;
   photoUrl: string;
