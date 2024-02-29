@@ -6,72 +6,71 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Todo struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
+type Entry struct {
+	ID       string `json:"id"`
+	Title    string `json:"title"`
+	PhotoUrl string `json:"photoUrl"`
+	Notes    string `json:"notes"`
 }
 
-type PartialTodo struct {
-	Title string `json:"title"`
-}
-
-var todos = []Todo{
-	{ID: "1", Title: "bla"},
-	{ID: "2", Title: "xdd"},
-	{ID: "3", Title: "xpp"},
+var entries = []Entry{
+	{ID: "1", Title: "Pikachu", PhotoUrl: "https://archives.bulbagarden.net/media/upload/thumb/4/4a/0025Pikachu.png/1200px-0025Pikachu.png", Notes: "eletric"},
+	{ID: "2", Title: "Ceruledge", PhotoUrl: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/937.png", Notes: "fire and ghost"},
+	{ID: "3", Title: "Miraidon", PhotoUrl: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/1008.png", Notes: "electric and dragon"},
 }
 
 func main() {
 	router := gin.Default()
-	router.GET("/todos", getTodos)
-	router.GET("/todos/:id", getTodoById)
-	router.POST("/todos", postTodo)
-	router.DELETE("/todos/:id", deleteTodo)
-	router.PATCH("/todos/:id", patchTodo)
+	router.GET("/entries", getEntries)
+	router.GET("/entries/:id", getEntryById)
+	router.POST("/entries", postEntry)
+	router.DELETE("/entries/:id", deleteEntry)
+	// router.PATCH("/entries/:id", patchTodo)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
 
-func getTodos(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, todos)
+func getEntries(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, entries)
 }
 
-func postTodo(context *gin.Context) {
-	var newTodo Todo
+func postEntry(context *gin.Context) {
+	var newEntry Entry
 
-	if err := context.BindJSON(&newTodo); err != nil {
+	if err := context.BindJSON(&newEntry); err != nil {
 		return
 	}
 
-	todos = append(todos, newTodo)
-	context.IndentedJSON(http.StatusCreated, newTodo)
+	entries = append(entries, newEntry)
+	context.IndentedJSON(http.StatusCreated, newEntry)
 }
 
-func getTodoById(context *gin.Context) {
+func getEntryById(context *gin.Context) {
 	id := context.Param("id")
 
-	for _, todo := range todos {
-		if todo.ID == id {
-			context.IndentedJSON(http.StatusOK, todo)
+	for _, entry := range entries {
+		if entry.ID == id {
+			context.IndentedJSON(http.StatusOK, entry)
 			return
 		}
 	}
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "entry not found"})
 }
 
-func deleteTodo(context *gin.Context) {
+func deleteEntry(context *gin.Context) {
 	id := context.Param("id")
 
-	for i, todo := range todos {
-		if todo.ID == id {
-			todos = append(todos[:i], todos[i+1:]...)
+	for i, entry := range entries {
+		if entry.ID == id {
+			entries = append(entries[:i], entries[i+1:]...)
 			context.Status(http.StatusNoContent)
 			return
 		}
 	}
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "entry not found"})
 }
 
+/*
 func patchTodo(context *gin.Context) {
 	id := context.Param("id")
 
@@ -91,3 +90,4 @@ func patchTodo(context *gin.Context) {
 
 	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 }
+*/
