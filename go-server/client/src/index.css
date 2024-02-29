@@ -4,12 +4,6 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-
   color-scheme: light dark;
   @apply bg-c-grey text-black;
-}
-
-.full-bleed {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
 }

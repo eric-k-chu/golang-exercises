@@ -27,7 +27,7 @@ export function Entries() {
   }
 
   return (
-    <Container>
+    <Container className="space-y-6">
       <section className="flex items-center justify-between">
         <strong className="text-xl md:text-3xl">Entries</strong>
         <Link

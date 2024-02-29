@@ -1,11 +1,13 @@
-import { ReactNode } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 
-type Props = {
+type Props = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-export function Container({ children }: Props) {
+export function Container(props: Props) {
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-12 py-6">{children}</div>
+    <div className={`mx-auto max-w-7xl px-12 py-6 ${props.className}`}>
+      {props.children}
+    </div>
   );
 }

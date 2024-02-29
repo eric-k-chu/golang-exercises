@@ -9,6 +9,7 @@ export function useFetch<T>(fn: () => Promise<T>) {
     async function load() {
       setIsLoading(true);
       try {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         const data = await fn();
         setData(data);
       } catch (error) {
