@@ -5,5 +5,10 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: light dark;
+  overflow-y: scroll;
   @apply bg-c-grey text-black;
+}
+
+* {
+  min-width: 0;
 }

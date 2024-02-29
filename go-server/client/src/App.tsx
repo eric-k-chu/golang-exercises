@@ -6,7 +6,7 @@ import { NewForm } from "./components/NewForm";
 
 function App() {
   return (
-    <main className="w-screen">
+    <main>
       <Routes>
         <Route path="/" element={<Navbar />}>
           <Route index element={<Entries />} />
