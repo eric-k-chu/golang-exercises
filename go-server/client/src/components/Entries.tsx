@@ -26,6 +26,23 @@ export function Entries() {
     );
   }
 
+  if (entries?.length === 0) {
+    return (
+      <Container className="space-y-6">
+        <section className="flex items-center justify-between">
+          <strong className="text-xl md:text-3xl">Entries</strong>
+          <Link
+            to="/new"
+            className="rounded-md bg-c-purple px-2 py-1 uppercase text-white"
+          >
+            New
+          </Link>
+        </section>
+        <p>You have no entries.</p>
+      </Container>
+    );
+  }
+
   return (
     <Container className="space-y-6">
       <section className="flex items-center justify-between">
@@ -43,7 +60,7 @@ export function Entries() {
             <img
               src={n.photoUrl}
               alt={n.title}
-              className="size-64 md:size-96"
+              className="size-64 object-cover md:size-96"
             />
           </div>
           <div className="basis-full px-4 md:basis-1/2">

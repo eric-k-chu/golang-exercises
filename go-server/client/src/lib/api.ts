@@ -36,3 +36,10 @@ export async function updateEntry(
   });
   if (!res.ok) throw new Error("Unable to create a new entry");
 }
+
+export async function deleteEntry(id: string | undefined): Promise<void> {
+  const res = await fetch(`http://localhost:8080/entries/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Unable to delete this entry");
+}

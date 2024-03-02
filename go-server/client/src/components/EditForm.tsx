@@ -1,13 +1,14 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useEntryForm } from "../hooks/useEntryForm";
+import { deleteEntry, updateEntry } from "../lib/api";
 import { Container } from "./Container";
-import { updateEntry } from "../lib/api";
 
 export function EditForm() {
   const { id: entryId } = useParams();
   const navigate = useNavigate();
   const { title, photoUrl, notes, isLoading, error } = useEntryForm(entryId);
+  const [isOpen, setIsOpen] = useState(false);
 
   async function editEntry(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,6 +18,20 @@ export function EditForm() {
         photoUrl: photoUrl.get,
         notes: notes.get,
       });
+      navigate("/");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "An unknown error has occured.",
+      );
+    }
+  }
+
+  async function confirmEntryDeletion() {
+    try {
+      await deleteEntry(entryId);
+      setIsOpen(false);
       navigate("/");
     } catch (error) {
       alert(
@@ -86,12 +101,42 @@ export function EditForm() {
             />
           </label>
         </section>
-        <section className="flex justify-end">
+        <section className="flex items-center justify-between">
+          <button
+            className="px-2 py-1 uppercase text-red-500 underline"
+            onClick={() => setIsOpen(true)}
+            type="button"
+          >
+            Delete
+          </button>
           <button className="rounded-md bg-c-purple px-2 py-1 uppercase text-white">
             Save
           </button>
         </section>
       </form>
+      {isOpen && (
+        <dialog className="absolute inset-0 z-10 flex size-96 flex-col items-center justify-center rounded-md bg-neutral-50 text-black">
+          <strong className="flex basis-1/2 items-end">
+            Delete this Entry?
+          </strong>
+          <section className="mt-auto flex w-full items-center justify-around p-4">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="rounded-md bg-red-500 px-2 py-1 text-white hover:bg-red-500/80"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="rounded-md bg-green-500 px-2 py-1 hover:bg-green-500/80"
+              onClick={confirmEntryDeletion}
+            >
+              Confirm
+            </button>
+          </section>
+        </dialog>
+      )}
     </Container>
   );
 }

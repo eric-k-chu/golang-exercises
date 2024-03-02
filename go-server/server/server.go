@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,8 @@ var entries = []Entry{
 	{ID: "3", Title: "Miraidon", PhotoUrl: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/1008.png", Notes: "electric and dragon"},
 }
 
+var nextId = 4
+
 func main() {
 	router := gin.Default()
 	router.GET("/entries", getEntries)
@@ -47,6 +50,8 @@ func postEntry(context *gin.Context) {
 		return
 	}
 
+	newEntry.ID = strconv.Itoa(nextId)
+	nextId++
 	entries = append(entries, newEntry)
 	context.IndentedJSON(http.StatusCreated, newEntry)
 }
