@@ -7,10 +7,13 @@ import (
 	"os"
 )
 
+const PORT = "3333"
+const URL = "localhost:" + PORT
+
 func main() {
 	http.HandleFunc("/", getRoot)
 
-	err := http.ListenAndServe("127.0.0.1:42069", nil)
+	err := http.ListenAndServe(URL, nil)
 
 	if err != nil {
 		fmt.Printf("Error in starting the server: %s\n", err)
