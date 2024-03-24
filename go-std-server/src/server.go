@@ -1,24 +1,27 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-const PORT = ":3333"
-
 func main() {
+	portPtr := flag.String("port", "3333", "port number")
+
+	flag.Parse()
+
 	router := http.NewServeMux()
 
 	router.HandleFunc("/", handleRoot)
 
 	server := http.Server{
-		Addr:    PORT,
+		Addr:    *portPtr,
 		Handler: router,
 	}
 
-	fmt.Println("Server listening on port :3333")
+	fmt.Println("Server listening on port", *portPtr)
 	server.ListenAndServe()
 }
 
