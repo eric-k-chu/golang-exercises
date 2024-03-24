@@ -2,26 +2,27 @@ package main
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"net/http"
-	"os"
 )
 
-const PORT = "3333"
-const URL = "localhost:" + PORT
+const PORT = ":3333"
 
 func main() {
-	http.HandleFunc("/", getRoot)
+	router := http.NewServeMux()
 
-	err := http.ListenAndServe(URL, nil)
+	router.HandleFunc("/", handleRoot)
 
-	if err != nil {
-		fmt.Printf("Error in starting the server: %s\n", err)
-		os.Exit(1)
+	server := http.Server{
+		Addr:    PORT,
+		Handler: router,
 	}
+
+	fmt.Println("Server listening on port :3333")
+	server.ListenAndServe()
 }
 
-func getRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("received / request")
-	io.WriteString(w, "Hello World\n")
+func handleRoot(w http.ResponseWriter, r *http.Request) {
+	log.Println("received / request")
+	w.Write([]byte("Hello, this is the root!"))
 }
