@@ -27,8 +27,8 @@ type Address struct {
 }
 
 type LatLng struct {
-	Lat float64
-	Lng float64
+	Lat string
+	Lng string
 }
 
 type TinyCompany struct {
@@ -38,7 +38,8 @@ type TinyCompany struct {
 }
 
 func ReadUser(id int16) (*User, error) {
-	res, err := http.Get("https://jsonplaceholder.typicode.com/users/" + string(id))
+	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/users/%d", id)
+	res, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("error reading user: %v", err)
 	}
